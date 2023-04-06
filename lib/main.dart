@@ -2,10 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/widgets/input_transaction.dart';
-
+import 'dart:io' show Platform;
 import 'models/transaction.dart';
 import 'widgets/chart.dart';
 import 'widgets/list_transaction.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() {
   runApp(const MyApp());
@@ -71,9 +72,18 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     final landscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
-    final appBar = AppBar(
-      title: const Text("Expense Calculator"),
-    );
+    final dynamic appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: const Text("Expense Calculator"),
+            trailing: CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: const Icon(CupertinoIcons.add),
+              onPressed: () => openInputpopup(context),
+            ),
+          )
+        : AppBar(
+            title: const Text("Expense Calculator"),
+          );
     final allTransaction = Container(
       child: const FittedBox(
         child: Text(
@@ -82,68 +92,75 @@ class _MainAppState extends State<MainApp> {
         ),
       ),
     );
-    return Scaffold(
-        appBar: appBar,
-        body: !landscape
-            ? Column(
+    final pageBody = !landscape
+        ? Column(
+            children: [
+              Container(
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top -
+                          25) *
+                      0.3,
+                  child: Chart(transactions)),
+              allTransaction,
+              Container(
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top -
+                          25) *
+                      0.7,
+                  child: ListTransaction(transactions, deleteTransaction)),
+            ],
+          )
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                      height: (MediaQuery.of(context).size.height -
-                              appBar.preferredSize.height -
-                              MediaQuery.of(context).padding.top -
-                              25) *
-                          0.3,
-                      child: Chart(transactions)),
-                  allTransaction,
-                  Container(
-                      height: (MediaQuery.of(context).size.height -
-                              appBar.preferredSize.height -
-                              MediaQuery.of(context).padding.top -
-                              25) *
-                          0.7,
-                      child: ListTransaction(transactions, deleteTransaction)),
-                ],
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Show Chart", style: TextStyle(fontSize: 15)),
-                      if (landscape)
-                        Switch.adaptive(
-                            activeColor: Theme.of(context).primaryColor,
-                            value: _switchChart,
-                            onChanged: (val) => toggleSwitchChart(val)),
-                    ],
-                  ),
-                  _switchChart
-                      ? Container(
-                          height: (MediaQuery.of(context).size.height -
-                                  appBar.preferredSize.height -
-                                  MediaQuery.of(context).padding.top -
-                                  15) *
-                              0.8,
-                          child: Chart(transactions))
-                      : Column(
-                          children: [
-                            allTransaction,
-                            Container(
-                                height: (MediaQuery.of(context).size.height -
-                                        appBar.preferredSize.height -
-                                        MediaQuery.of(context).padding.top -
-                                        35) *
-                                    0.8,
-                                child: ListTransaction(
-                                    transactions, deleteTransaction)),
-                          ],
-                        ),
+                  const Text("Show Chart", style: TextStyle(fontSize: 15)),
+                  if (landscape)
+                    Switch.adaptive(
+                        activeColor: Theme.of(context).primaryColor,
+                        value: _switchChart,
+                        onChanged: (val) => toggleSwitchChart(val)),
                 ],
               ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => openInputpopup(context),
-          child: const Icon(Icons.add),
-        ));
+              _switchChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top -
+                              15) *
+                          0.8,
+                      child: Chart(transactions))
+                  : Column(
+                      children: [
+                        allTransaction,
+                        Container(
+                            height: (MediaQuery.of(context).size.height -
+                                    appBar.preferredSize.height -
+                                    MediaQuery.of(context).padding.top -
+                                    35) *
+                                0.8,
+                            child: ListTransaction(
+                                transactions, deleteTransaction)),
+                      ],
+                    ),
+            ],
+          );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            navigationBar: appBar,
+            child: SafeArea(child: pageBody),
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: SafeArea(child: pageBody),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => openInputpopup(context),
+              child: const Icon(Icons.add),
+            ));
   }
 }
