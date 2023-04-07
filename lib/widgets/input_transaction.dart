@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
 
 class InputTransaction extends StatefulWidget {
   Function addTransaction;
@@ -80,9 +82,13 @@ class _InputTransactionState extends State<InputTransaction> {
                   ),
                   readOnly: true,
                   onTap: showDatePickerOnClick),
-              TextButton(
-                  onPressed: () => submitData(),
-                  child: const Text("Add Expense"))
+              Platform.isIOS
+                  ? CupertinoButton(
+                      onPressed: () => submitData(),
+                      child: const Text("Add Expense"))
+                  : ElevatedButton(
+                      onPressed: () => submitData(),
+                      child: const Text("Add Expense"))
             ])),
       ),
     );

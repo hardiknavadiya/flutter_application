@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Expense Cal',
-      theme: ThemeData(primarySwatch: Colors.deepOrange),
+      theme: ThemeData(
+          primarySwatch: Colors.deepOrange, accentColor: Colors.white),
       home: MainApp(),
     );
   }
@@ -32,9 +33,27 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends State<MainApp> {
+class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   List<Transaction> transactions = [];
   bool _switchChart = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   void addTransaction(String tName, double tAmount, DateTime date) {
     setState(() {
@@ -74,10 +93,14 @@ class _MainAppState extends State<MainApp> {
         MediaQuery.of(context).orientation == Orientation.landscape;
     final dynamic appBar = Platform.isIOS
         ? CupertinoNavigationBar(
+            backgroundColor: Theme.of(context).primaryColor,
             middle: const Text("Expense Calculator"),
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,
-              child: const Icon(CupertinoIcons.add),
+              child: const Icon(
+                CupertinoIcons.add,
+                color: CupertinoColors.white,
+              ),
               onPressed: () => openInputpopup(context),
             ),
           )
@@ -99,6 +122,7 @@ class _MainAppState extends State<MainApp> {
                   height: (MediaQuery.of(context).size.height -
                           appBar.preferredSize.height -
                           MediaQuery.of(context).padding.top -
+                          MediaQuery.of(context).padding.bottom -
                           25) *
                       0.3,
                   child: Chart(transactions)),
@@ -107,6 +131,7 @@ class _MainAppState extends State<MainApp> {
                   height: (MediaQuery.of(context).size.height -
                           appBar.preferredSize.height -
                           MediaQuery.of(context).padding.top -
+                          MediaQuery.of(context).padding.bottom -
                           25) *
                       0.7,
                   child: ListTransaction(transactions, deleteTransaction)),
