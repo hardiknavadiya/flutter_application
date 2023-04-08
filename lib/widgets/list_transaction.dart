@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -7,6 +9,7 @@ class ListTransaction extends StatelessWidget {
   final List<Transaction> transactions;
   Function deleteTransaction;
   ListTransaction(this.transactions, this.deleteTransaction, {super.key});
+  var availableColors = [Colors.red, Colors.amber, Colors.blue, Colors.black];
 
   @override
   Widget build(BuildContext context) {
@@ -17,16 +20,13 @@ class ListTransaction extends StatelessWidget {
               margin: EdgeInsets.all(constraint.maxHeight * 0.01),
               height: constraint.maxHeight * 0.98,
               child: transactions.isEmpty
-                  ? Card(
-                      elevation: 5,
-                      child: Center(
-                        child: Text(
-                          "No Transaction Available",
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor),
-                        ),
+                  ? Center(
+                      child: Text(
+                        "No Transaction Available",
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor),
                       ),
                     )
                   : ListView.builder(
@@ -37,6 +37,8 @@ class ListTransaction extends StatelessWidget {
                             child: ListTile(
                               leading: CircleAvatar(
                                 radius: 35,
+                                backgroundColor:
+                                    availableColors[Random().nextInt(4)],
                                 child: FittedBox(
                                   child: Text(transactions[index]
                                       .amount
