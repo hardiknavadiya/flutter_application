@@ -19,7 +19,14 @@ class TransactionIteam extends StatefulWidget {
 }
 
 class _TransactionIteamState extends State<TransactionIteam> {
-  var availableColors = [Colors.red, Colors.amber, Colors.blue, Colors.black];
+  var bgColor;
+  @override
+  void initState() {
+    print("init state called transaction item");
+    var availableColors = [Colors.red, Colors.amber, Colors.blue, Colors.black];
+    bgColor = availableColors[Random().nextInt(4)];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +35,7 @@ class _TransactionIteamState extends State<TransactionIteam> {
         child: ListTile(
           leading: CircleAvatar(
             radius: 35,
-            backgroundColor: availableColors[Random().nextInt(4)],
+            backgroundColor: bgColor,
             child: FittedBox(
               child: Text(widget.transaction.amount.toStringAsFixed(0)),
             ),

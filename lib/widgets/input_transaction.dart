@@ -19,7 +19,6 @@ class _InputTransactionState extends State<InputTransaction> {
   var datepickerDate;
 
   submitData() {
-    print("inside input validation");
     if (nameController.text.isEmpty ||
         double.parse(amuntController.text).isNegative ||
         dateController.text.isEmpty) {
