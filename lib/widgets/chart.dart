@@ -32,9 +32,6 @@ class _ChartState extends State<Chart> {
           }
         }
       }
-      print(DateFormat.E().format(weekDay));
-      print("Day= $tottalSumOfEachWeek");
-      print(DateTime.now());
       return {
         "day": DateFormat.E().format(weekDay).substring(0, 1),
         "amount": tottalSumOfEachWeek.toStringAsFixed(0),
@@ -51,9 +48,7 @@ class _ChartState extends State<Chart> {
           ? 0.0
           : double.parse(transaction["amount"].toString()) / maxValue;
       transaction.putIfAbsent("proportion", () => entireWeekSum.toString());
-      print("transaction=$transaction");
     }
-    print("maxvalue = $maxValue");
     return processedTransationsList;
   }
 

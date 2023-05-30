@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Expense Cal',
       theme: ThemeData(
-          primarySwatch: Colors.deepOrange, accentColor: Colors.white),
+          primarySwatch: Colors.deepOrange, backgroundColor: Colors.white),
       home: MainApp(),
     );
   }
@@ -34,7 +34,38 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
-  List<Transaction> transactions = [];
+  List<Transaction> transactions = [
+    Transaction(
+      DateTime.now().toString(),
+      "name",
+      500,
+      DateTime.now(),
+    ),
+    Transaction(
+      DateTime.now().toString(),
+      "name",
+      500,
+      DateTime.now(),
+    ),
+    Transaction(
+      DateTime.now().toString(),
+      "name",
+      500,
+      DateTime.now(),
+    ),
+    Transaction(
+      DateTime.now().toString(),
+      "name",
+      500,
+      DateTime.now(),
+    ),
+    Transaction(
+      DateTime.now().toString(),
+      "name",
+      500,
+      DateTime.now(),
+    )
+  ];
   bool _switchChart = false;
 
   @override
